@@ -6,6 +6,6 @@ package ru.ispras.modis.flint.classifiers
  * Date: 7/26/13
  * Time: 8:49 PM
  */
-trait DensityEstimator {
-    def apply(value: Double): Double
+trait DensityEstimator[LabelType] {
+    def apply(label: LabelType, featureId: Int, value: Double): Double
 }
