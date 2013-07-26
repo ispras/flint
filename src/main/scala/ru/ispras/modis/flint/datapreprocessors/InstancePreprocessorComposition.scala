@@ -14,4 +14,6 @@ class InstancePreprocessorComposition[T <: Instance](private val preprocessors: 
     = preprocessors.foldLeft(data)((data, preprocessor) => preprocessor(data))
 
     def :+(preprocessor: InstancePreprocessor[T]) = new InstancePreprocessorComposition(preprocessors :+ preprocessor)
+
+    def +:(preprocessor: InstancePreprocessor[T]) = new InstancePreprocessorComposition(preprocessor +: preprocessors)
 }
