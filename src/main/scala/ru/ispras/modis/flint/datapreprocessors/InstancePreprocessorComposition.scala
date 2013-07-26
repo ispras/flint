@@ -10,7 +10,7 @@ import ru.ispras.modis.flint.instances.{InstanceBuilder, Instance}
  * Time: 10:30 PM
  */
 class InstancePreprocessorComposition[T <: Instance](private val preprocessors: Seq[InstancePreprocessor[T]]) extends InstancePreprocessor[T] {
-    def apply(data: RDD[T])(implicit arg0: ClassManifest[T], instanceBuilder: InstanceBuilder[T]): RDD[T]
+    def apply(data: RDD[T])(implicit manifest: ClassManifest[T], instanceBuilder: InstanceBuilder[T]): RDD[T]
     = preprocessors.foldLeft(data)((data, preprocessor) => preprocessor(data))
 
     def :+(preprocessor: InstancePreprocessor[T]) = new InstancePreprocessorComposition(preprocessors :+ preprocessor)

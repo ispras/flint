@@ -10,5 +10,5 @@ import ru.ispras.modis.flint.instances.{InstanceBuilder, Instance}
  * Time: 7:53 PM
  */
 class NullInstancePreprocessor[T <: Instance] extends InstancePreprocessor[T] {
-    def apply(data: RDD[T])(implicit arg0: ClassManifest[T], instanceBuilder: InstanceBuilder[T]): RDD[T] = data
+    def apply(data: RDD[T])(implicit manifest: ClassManifest[T], instanceBuilder: InstanceBuilder[T]): RDD[T] = data
 }

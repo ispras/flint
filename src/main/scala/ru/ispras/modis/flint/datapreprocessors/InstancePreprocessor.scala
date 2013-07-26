@@ -10,7 +10,7 @@ import ru.ispras.modis.flint.instances.{InstanceBuilder, Instance}
  * Time: 7:52 PM
  */
 trait InstancePreprocessor[T <: Instance] {
-    def apply(data: RDD[T])(implicit arg0: ClassManifest[T], instanceBuilder: InstanceBuilder[T]): RDD[T]
+    def apply(data: RDD[T])(implicit manifest: ClassManifest[T], instanceBuilder: InstanceBuilder[T]): RDD[T]
 }
 
 object InstancePreprocessor {
