@@ -4,8 +4,8 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>290</x>
-      <y>510</y>
+      <x>720</x>
+      <y>800</y>
       <w>100</w>
       <h>30</h>
     </coordinates>
@@ -16,8 +16,8 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>520</x>
-      <y>510</y>
+      <x>950</x>
+      <y>800</y>
       <w>200</w>
       <h>90</h>
     </coordinates>
@@ -31,8 +31,8 @@ Feature
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>440</x>
-      <y>680</y>
+      <x>870</x>
+      <y>970</y>
       <w>150</w>
       <h>30</h>
     </coordinates>
@@ -42,8 +42,8 @@ Feature
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>660</x>
-      <y>680</y>
+      <x>1090</x>
+      <y>970</y>
       <w>130</w>
       <h>30</h>
     </coordinates>
@@ -53,8 +53,8 @@ Feature
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>490</x>
-      <y>570</y>
+      <x>920</x>
+      <y>860</y>
       <w>150</w>
       <h>130</h>
     </coordinates>
@@ -64,8 +64,8 @@ Feature
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>590</x>
-      <y>570</y>
+      <x>1020</x>
+      <y>860</y>
       <w>160</w>
       <h>130</h>
     </coordinates>
@@ -75,8 +75,8 @@ Feature
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>230</x>
-      <y>370</y>
+      <x>660</x>
+      <y>660</y>
       <w>230</w>
       <h>70</h>
     </coordinates>
@@ -89,8 +89,8 @@ IndexedSeq[+Feature]
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>310</x>
-      <y>410</y>
+      <x>740</x>
+      <y>700</y>
       <w>50</w>
       <h>120</h>
     </coordinates>
@@ -100,8 +100,8 @@ IndexedSeq[+Feature]
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>360</x>
-      <y>500</y>
+      <x>790</x>
+      <y>790</y>
       <w>180</w>
       <h>50</h>
     </coordinates>
@@ -111,8 +111,8 @@ IndexedSeq[+Feature]
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>270</x>
-      <y>200</y>
+      <x>700</x>
+      <y>490</y>
       <w>520</w>
       <h>50</h>
     </coordinates>
@@ -124,9 +124,9 @@ IndexedSeq[+Feature]
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>270</x>
-      <y>590</y>
-      <w>150</w>
+      <x>640</x>
+      <y>880</y>
+      <w>220</w>
       <h>50</h>
     </coordinates>
     <panel_attributes>LabelledInstance[LabelType]
@@ -137,12 +137,38 @@ IndexedSeq[+Feature]
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>300</x>
-      <y>510</y>
+      <x>740</x>
+      <y>800</y>
       <w>50</w>
       <h>100</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>30;30;30;80</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>100</x>
+      <y>770</y>
+      <w>470</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;trait&gt;&gt;
+InstanceBuilder
+--
++apply(toMakeFrom: T, newFeatures: IndexedSeq[Feature]): T</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>540</x>
+      <y>760</y>
+      <w>200</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+&lt;&lt;instantiates&gt;&gt;</panel_attributes>
+    <additional_attributes>180;50;30;50</additional_attributes>
   </element>
 </diagram>
