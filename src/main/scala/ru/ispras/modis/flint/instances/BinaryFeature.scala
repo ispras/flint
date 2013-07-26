@@ -8,4 +8,6 @@ package ru.ispras.modis.flint.instances
  */
 class BinaryFeature(val featureId: Int) extends Feature with Serializable {
     def featureWeight: Double = 1d
+
+    override def toString = featureId.toString
 }
