@@ -10,8 +10,8 @@ import ru.ispras.modis.flint.instances.{InstanceBuilder, WeightedFeature, Instan
  * Date: 7/25/13
  * Time: 7:54 PM
  */
-class NormalizingInstancePreprocessor extends InstancePreprocessor {
-    def apply[T <: Instance](data: RDD[T])(implicit arg0: ClassManifest[T], instanceBuilder: InstanceBuilder[T]): RDD[T] = {
+class NormalizingInstancePreprocessor[T <: Instance] extends InstancePreprocessor[T] {
+    def apply(data: RDD[T])(implicit arg0: ClassManifest[T], instanceBuilder: InstanceBuilder[T]): RDD[T] = {
         val dataSetSize = data.count()
         val gropedByFeatureId: RDD[(Int, Seq[Double])] = data.flatMap(_.map(feature => (feature.featureId, feature.featureWeight))).groupByKey()
 

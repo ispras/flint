@@ -6,7 +6,7 @@ package ru.ispras.modis.flint.instances
  * Date: 7/26/13
  * Time: 7:00 PM
  */
-trait InstanceBuilder[T <: Instance] {
+trait InstanceBuilder[T <: Instance] extends Serializable {
     def apply(toMakeFrom: T, newFeatures: IndexedSeq[Feature]): T
 }
 

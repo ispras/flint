@@ -22,7 +22,7 @@ object Test extends App {
         }.toIndexedSeq, label)
     }).toSeq)
 
-    val data1 = (new NormalizingInstancePreprocessor() :+ new NormalizingInstancePreprocessor()).apply(data)
+    val data1 = (new NormalizingInstancePreprocessor[LabelledInstance[Int]]() :+ new NormalizingInstancePreprocessor[LabelledInstance[Int]]()).apply(data)
 
 
     //    println(new ClassifierCrossValidator[Int](0.2, 50, DefaultSeedGenerator.getInstance(), MersenneTwistProvider).apply(new APrioryKnowledgeClassifierTrainer[Int](), data))
