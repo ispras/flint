@@ -1,6 +1,6 @@
 package ru.ispras.modis.flint.textprocessing
 
-import spark.{SparkContext, RDD}
+import spark.RDD
 import ru.ispras.modis.flint.instances.{Instance, BinaryFeature}
 
 /**
@@ -16,12 +16,4 @@ class TextToInstances(private val tokenizer: Tokenizer, private val preprocessor
 
         tokens.map(tokens => new Instance(tokens.map(token => new BinaryFeature(tokenToIndex(token)))))
     }
-}
-
-object test extends App {
-    val texts = Seq("girls boobs", "boobs booze")
-
-    val sc = new SparkContext("local[4]", "")
-    val rdd = sc.parallelize(texts)
-    new TextToInstances(new WhiteSpaceTokenizer, new NullTextPreprocessor).apply(rdd).collect().foreach(println)
 }
