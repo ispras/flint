@@ -50,10 +50,7 @@ class LinearRegressionTrainer(l2regularization: Double) extends RegressionTraine
             } while (err - preverr > 0.01 * alpha * sumgrad)
             tmp = tmp1.copy()
             i += 1
-            println("!! " + err + " ! " + i)
-
         }
-        println("!! " + err + " ! " + i)
         return tmp
     }
 }
