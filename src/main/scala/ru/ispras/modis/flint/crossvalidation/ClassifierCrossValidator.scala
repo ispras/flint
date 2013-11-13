@@ -1,6 +1,6 @@
 package ru.ispras.modis.flint.crossvalidation
 
-import spark.RDD
+import org.apache.spark.rdd.RDD
 import ru.ispras.modis.flint.classifiers.ClassifierTrainer
 import org.uncommons.maths.random.SeedGenerator
 import ru.ispras.modis.flint.random.RandomGeneratorProvider

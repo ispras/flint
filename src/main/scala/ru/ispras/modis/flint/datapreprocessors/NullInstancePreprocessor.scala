@@ -1,6 +1,6 @@
 package ru.ispras.modis.flint.datapreprocessors
 
-import spark.RDD
+import org.apache.spark.rdd.RDD
 import ru.ispras.modis.flint.instances.{InstanceBuilder, Instance}
 
 /**

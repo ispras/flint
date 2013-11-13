@@ -1,6 +1,6 @@
 package ru.ispras.modis.flint.instances
 
-import spark.RDD
+import org.apache.spark.rdd.RDD
 
 /**
  * Created with IntelliJ IDEA.
