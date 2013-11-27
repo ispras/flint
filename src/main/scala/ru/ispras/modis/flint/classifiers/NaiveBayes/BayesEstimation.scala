@@ -24,4 +24,5 @@ class BayesEstimation[LabelType](features: Map[(LabelType,Int,Double),Long]) ext
 
     }
 
+
 }
