@@ -13,10 +13,8 @@ import scala.math.log
  */
 
 
-class BayesClassifier[LabelType](frequency: (LabelType,Long)) extends Classifier[LabelType] {
-
-   def classify(labelProb: Map[LabelType,Double], sample: DensityEstimation[LabelType]) = {
-
-
-   }
+class BayesClassifier[LabelType](labelProb: Map[LabelType,Double], sample: DensityEstimation[LabelType]) extends Classifier[LabelType] {
+    def apply(instance: Instance): ClassificationResult[LabelType] = labelProb.map{case(label, aprioryProb) =>
+        (label, aprioryProb + )
+    }
 }
