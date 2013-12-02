@@ -2,8 +2,6 @@ package flint.src.main.scala.ru.ispras.modis.flint.classifiers.NaiveBayes
 
 import ru.ispras.modis.flint.classifiers.{ClassifierTrainer, ClassificationResult, Classifier, DensityEstimation}
 import ru.ispras.modis.flint.instances.{LabelledInstance, Instance}
-import org.apache.spark.rdd.RDD
-import scala.math.log
 /**
  * Created with IntelliJ IDEA.
  * User: lena
@@ -14,7 +12,13 @@ import scala.math.log
 
 
 class BayesClassifier[LabelType](labelProb: Map[LabelType,Double], sample: DensityEstimation[LabelType]) extends Classifier[LabelType] {
-    def apply(instance: Instance): ClassificationResult[LabelType] = labelProb.map{case(label, aprioryProb) =>
-        (label, aprioryProb + )
-    }
+
+
+  override def apply(instance: Instance): ClassificationResult[LabelType] = {
+
+    val result = labelProb.map{case (label, aprioryProb) => (label, aprioryProb + sample.apply(label, instance))}.maxBy(_._2);
+
+    new ClassificationResult[LabelType](result._1,Some(result._2))
+
+  }
 }

@@ -1,11 +1,11 @@
 package flint.src.main.scala.ru.ispras.modis.flint.classifiers.NaiveBayes
 
-import org.apache.spark.rdd.RDD
 import ru.ispras.modis.flint.classifiers.{DensityEstimation, Classifier, ClassifierTrainer}
 import ru.ispras.modis.flint.instances
 import ru.ispras.modis.flint.instances
+import ru.ispras.modis.flint.instances.LabelledInstance
 import scala.math.log
-import flint.src.main.scala.ru.ispras.modis.flint.instances.LabelledInstance
+import spark.RDD
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,13 +14,17 @@ import flint.src.main.scala.ru.ispras.modis.flint.instances.LabelledInstance
  * Time: 17:41
  * To change this template use File | Settings | File Templates.
  */
-class BayesClassifierTrainer[LabelType](sample: RDD[LabelledInstance[LabelType]]) extends ClassifierTrainer[LabelType] {
+class BayesClassifierTrainer[LabelType: ClassManifest](private val data: RDD[LabelledInstance[LabelType]], sample: DensityEstimation[LabelType]) extends ClassifierTrainer[LabelType] {
 
-  override def apply(sample: RDD[LabelledInstance[LabelType]]) : Classifier[LabelType] = {
+  override def apply(data: RDD[LabelledInstance[LabelType]]) : Classifier[LabelType] = {
 
-    val frequency = sample.map(instance => instance.label).countByValue().maxBy(_._2)
+    val freq = new BayesEstimator[LabelType](data).frequency
 
-    new BayesClassifier[LabelType](frequency)
+      val size = freq.map(_._2).sum
+
+      val labelProb: Map[LabelType,Double] = freq.map{case(label, freq) => (label, math.log(freq.toDouble / size))}.toMap
+
+      new BayesClassifier[LabelType](labelProb,sample)
 
 
   }
