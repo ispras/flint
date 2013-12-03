@@ -10,7 +10,7 @@ class BayesClassifierTrainer[LabelType: ClassManifest](private val data: RDD[Lab
 
   override def apply(data: RDD[LabelledInstance[LabelType]]) : Classifier[LabelType] = {
 
-    val labelCount = data.map(instance => instance.label).countByValue()
+      val labelCount = data.map(instance => instance.label).countByValue()
 
       val trainData = new BayesEstimator[LabelType].apply(data)
 

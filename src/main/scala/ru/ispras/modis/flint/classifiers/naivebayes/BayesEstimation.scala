@@ -8,7 +8,6 @@ class BayesEstimation[LabelType](private val logFeatureProbability: Map[(LabelTy
   override def apply(label: LabelType,instance: Instance) : Double = {
 
            instance.foldLeft(0.0)((result,feature) => result + logFeatureProbability(label,feature.featureId,feature.featureWeight))
-
     }
 
 

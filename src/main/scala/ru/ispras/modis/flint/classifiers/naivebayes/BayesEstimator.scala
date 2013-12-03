@@ -17,7 +17,7 @@ class BayesEstimator[LabelType: ClassManifest] extends DensityEstimator[LabelTyp
     val featureLogProb :Map[(LabelType,Int,Double), Double] = labelIdWeight.map{
       case ((label, featureId, weight), value) => ((label, featureId,weight),log(value.toDouble/labelCount(label)))}
 
-   new BayesEstimation[LabelType](featureLogProb)
+    new BayesEstimation[LabelType](featureLogProb)
  }
 
 }
