@@ -6,7 +6,6 @@ import scala.math.log
 import spark.RDD
 
 
-
 class BayesClassifierTrainer[LabelType: ClassManifest](private val data: RDD[LabelledInstance[LabelType]], private val densityEstimator: DensityEstimator[LabelType]) extends ClassifierTrainer[LabelType] {
 
   override def apply(data: RDD[LabelledInstance[LabelType]]) : Classifier[LabelType] = {

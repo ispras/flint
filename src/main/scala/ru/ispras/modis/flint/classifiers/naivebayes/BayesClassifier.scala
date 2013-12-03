@@ -4,7 +4,6 @@ import ru.ispras.modis.flint.classifiers.{ClassifierTrainer, ClassificationResul
 import ru.ispras.modis.flint.instances.{LabelledInstance, Instance}
 import scala.math.exp
 
-
 class BayesClassifier[LabelType](private val aprioryProbability: Map[LabelType,Double], private val densityEstimator: DensityEstimation[LabelType]) extends Classifier[LabelType] {
 
   override def apply(instance: Instance): ClassificationResult[LabelType] = {
