@@ -5,6 +5,7 @@ import ru.ispras.modis.flint.instances.{LabelledInstance, Feature}
 import scala.math.log
 import spark.RDD
 
+
 class BayesEstimator[LabelType: ClassManifest] extends DensityEstimator[LabelType]{
 
   override def apply(data: RDD[LabelledInstance[LabelType]]) : DensityEstimation[LabelType] = {
@@ -14,10 +15,10 @@ class BayesEstimator[LabelType: ClassManifest] extends DensityEstimator[LabelTyp
     val labelIdWeight :Map[(LabelType,Int,Double), Long] = data.flatMap(instance =>
       instance.map(feature => (instance.label, feature.featureId, feature.featureWeight ))).countByValue().toMap
 
-    val featurelogProb :Map[(LabelType,Int,Double), Double] = labelIdWeight.map{
+    val featureLogProb :Map[(LabelType,Int,Double), Double] = labelIdWeight.map{
       case ((label, featureId, weight), value) => ((label, featureId,weight),log(value.toDouble/labelCount(label)))}
 
-   new BayesEstimation[LabelType](featurelogProb)
+   new BayesEstimation[LabelType](featureLogProb)
  }
 
 }
