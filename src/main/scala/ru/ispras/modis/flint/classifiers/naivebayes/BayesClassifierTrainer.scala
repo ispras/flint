@@ -5,11 +5,11 @@ import ru.ispras.modis.flint.instances.LabelledInstance
 import scala.math.log
 import spark.RDD
 
-class BayesClassifierTrainer[LabelType: ClassManifest](private val data: RDD[LabelledInstance[LabelType]], sample: DensityEstimator[LabelType]) extends ClassifierTrainer[LabelType] {
+class BayesClassifierTrainer[LabelType: ClassManifest](private val data: RDD[LabelledInstance[LabelType]], /*rename and private val*/ sample: DensityEstimator[LabelType]) extends ClassifierTrainer[LabelType] {
 
   override def apply(data: RDD[LabelledInstance[LabelType]]) : Classifier[LabelType] = {
 
-    val labelCountValue = data.map(instance => instance.label).countByValue()
+    val labelCountValue /*why value? why not labelCount?*/ = data.map(instance => instance.label).countByValue()
 
       val trainData = new BayesEstimator[LabelType].apply(data)
 
