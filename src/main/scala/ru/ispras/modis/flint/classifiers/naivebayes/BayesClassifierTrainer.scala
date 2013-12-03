@@ -7,10 +7,9 @@ import spark.RDD
 
 class BayesClassifierTrainer[LabelType: ClassManifest](private val data: RDD[LabelledInstance[LabelType]], sample: DensityEstimator[LabelType]) extends ClassifierTrainer[LabelType] {
 
-
-
   override def apply(data: RDD[LabelledInstance[LabelType]]) : Classifier[LabelType] = {
-      val labelCountValue = data.map(instance => instance.label).countByValue()
+
+    val labelCountValue = data.map(instance => instance.label).countByValue()
 
       val trainData = new BayesEstimator[LabelType].apply(data)
 
@@ -19,9 +18,6 @@ class BayesClassifierTrainer[LabelType: ClassManifest](private val data: RDD[Lab
       val aprioryProbability: Map[LabelType,Double] = labelCountValue.map{case(label, freq) => (label, math.log(freq.toDouble/size))}.toMap
 
       new BayesClassifier[LabelType](aprioryProbability,trainData)
-
-
-
   }
 
 }

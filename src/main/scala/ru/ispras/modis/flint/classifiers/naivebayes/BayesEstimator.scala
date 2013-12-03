@@ -5,8 +5,6 @@ import ru.ispras.modis.flint.instances.{LabelledInstance, Feature}
 import scala.math.log
 import spark.RDD
 
-
-
 class BayesEstimator[LabelType: ClassManifest] extends DensityEstimator[LabelType]{
 
   override def apply(data: RDD[LabelledInstance[LabelType]]) : DensityEstimation[LabelType] = {
