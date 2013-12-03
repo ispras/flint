@@ -8,9 +8,9 @@ class BayesClassifier[LabelType](private val aprioryProbability: Map[LabelType,D
 
   override def apply(instance: Instance): ClassificationResult[LabelType] = {
 
-     val posteriorProb = aprioryProbability.map{case (label, aprioryProb) => (label, aprioryProb + densityEstimator.apply(label, instance))}.maxBy(_._2) //omit semicolons
+    val posteriorProb = aprioryProbability.map{case (label, aprioryProb) => (label, aprioryProb + densityEstimator.apply(label, instance))}.maxBy(_._2)
 
-     new ClassificationResult[LabelType](posteriorProb._1,Some(exp(posteriorProb._2)))
+    new ClassificationResult[LabelType](posteriorProb._1,Some(exp(posteriorProb._2)))
 
   }
 }
