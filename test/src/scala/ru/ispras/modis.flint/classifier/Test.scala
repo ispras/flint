@@ -7,7 +7,7 @@ import ru.ispras.modis.flint.regression.LinearRegressionTrainer
 import org.apache.spark.SparkContext
 import org.uncommons.maths.random.DefaultSeedGenerator
 import ru.ispras.modis.flint.crossvalidation.RegressionCrossValidator
-
+import ru.ispras.modis.flint.regression.ArmijoStepper
 /**
  * Created with IntelliJ IDEA.
  * User: valerij
@@ -28,7 +28,7 @@ object Test extends App {
 
     //val data1 = (new NormalizingInstancePreprocessor[LabelledInstance[Double]]() :+ new NormalizingInstancePreprocessor[LabelledInstance[Double]]()).apply(data)
 
-    val x = new RegressionCrossValidator(0.8, 10, DefaultSeedGenerator.getInstance(), MersenneTwistProvider).apply(new LinearRegressionTrainer(0.000001, DefaultSeedGenerator.getInstance(), MersenneTwistProvider), data.cache())
+    val x = new RegressionCrossValidator(0.8, 10, DefaultSeedGenerator.getInstance(), MersenneTwistProvider).apply(new LinearRegressionTrainer(0.000001, new ArmijoStepper, DefaultSeedGenerator.getInstance(), MersenneTwistProvider), data.cache())
     println(x.rootMeanSquareDeviation)
 
 }

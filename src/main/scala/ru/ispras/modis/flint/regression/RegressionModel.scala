@@ -8,6 +8,6 @@ import ru.ispras.modis.flint.instances.Instance
  * Date: 7/25/13
  * Time: 11:10 PM
  */
-trait RegressionModel extends Serializable {
-    def predicts(instance: Instance): Double // why not apply? rename it as apply.
+trait RegressionModel extends Serializable{
+    def apply(instance: Instance): Double
 }

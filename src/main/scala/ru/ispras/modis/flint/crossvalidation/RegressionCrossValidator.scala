@@ -16,7 +16,7 @@ import ru.ispras.modis.flint.random.RandomGeneratorProvider
 object RegressionCrossValidator extends CrossValidationUtils[Double]{
     private def makeIteration(regressionTrainer: RegressionTrainer, train: RDD[LabelledInstance[Double]], test: RDD[LabelledInstance[Double]]) = {
         val model = regressionTrainer(train)
-        test.map(labelled => (labelled.label, model.predicts(labelled))).map {
+        test.map(labelled => (labelled.label, model(labelled))).map {
             case (actual, predicted) => math.pow(actual - predicted, 2)
         }.aggregate(0d)((sum, element) => sum + element, combOp) / test.count()
     }

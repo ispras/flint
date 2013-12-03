@@ -2,6 +2,7 @@ package ru.ispras.modis.flint.regression
 
 import ru.ispras.modis.flint.instances.Instance
 import scalala.tensor.dense.DenseVector
+import ru.ispras.modis.flint.instances.LabelledInstance
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,18 +10,17 @@ import scalala.tensor.dense.DenseVector
  * Date: 7/25/13
  * Time: 11:11 PM
  */
-class LinearRegressionModel(private[regression] val /*this data looks like weights*/ data: DenseVector[Double]) extends RegressionModel with Iterable[Double] {
-    // why the hell is LinearRegressionModel Iterable? It's not a collection -- it's something that can predict an outcome for Instance
-    def predicts(instance: Instance): Double = {
+class LinearRegressionModel(private[regression] val weights: DenseVector[Double]) extends RegressionModel {
+
+    def apply(instance: Instance): Double = {
         var sum = 0.0
         for (i <- instance)
-            sum += data(i.featureId) * i.featureWeight
-        return sum // delete "return" -- just "sum"
+            sum  += weights(i.featureId) * i.featureWeight
+        sum
     }
 
-    def apply(idx: Int): Double = data(idx)
-
-    def iterator: Iterator[Double] = data.iterator
-
-    def length: Int = data.length // dimensionality, not length. And R U convinced in this method necessity?
+    def squareError(instance: LabelledInstance[Double]): Double = {
+        val diff = instance.label - apply(instance)
+        diff * diff
+    }
 }

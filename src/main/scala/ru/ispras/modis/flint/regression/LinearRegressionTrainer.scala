@@ -5,6 +5,8 @@ import org.apache.spark.rdd.RDD
 import ru.ispras.modis.flint.random.RandomGeneratorProvider
 import org.uncommons.maths.random.SeedGenerator
 import scalala.tensor.dense.DenseVector
+import org.uncommons.maths.random.DefaultSeedGenerator
+import ru.ispras.modis.flint.random.MersenneTwistProvider
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,9 +15,10 @@ import scalala.tensor.dense.DenseVector
  * Time: 11:13 PM
  */
 
-class LinearRegressionTrainer(private val l2regularization /*l2regularisation is either a term in functional or an approach. This value is a regularisation parameter. It's also often referred as 'lambda'*/ : Double,
-                              private val seedGenerator: SeedGenerator,
-                              private val randomGeneratorProvider: RandomGeneratorProvider) extends RegressionTrainer with Stepper /*wtf?*/ {
+class LinearRegressionTrainer(private val eps: Double = 1e-2,
+                              private val stepper:Stepper = new ArmijoStepper,
+                              private val seedGenerator: SeedGenerator = DefaultSeedGenerator.getInstance(),
+                              private val randomGeneratorProvider: RandomGeneratorProvider = MersenneTwistProvider) extends RegressionTrainer{
 
     def apply(data: RDD[LabelledInstance[Double]]): LinearRegressionModel = {
 
@@ -26,24 +29,19 @@ class LinearRegressionTrainer(private val l2regularization /*l2regularisation is
         val randArray = DenseVector.zeros[Double](data.first().length)
         for (i <- 0 until randArray.length)
             randArray(i) = random.nextDouble()
-        // DenseVector.rand() was not good enough?
 
         var currentModel = new LinearRegressionModel(randArray)
 
-        var newSquareErr = data.map(point => {
-            // code duplication. I see the same stuff in stepper.
-            val err = point.label - currentModel.predicts(point) // do not repeat yourself
-            err * err
-        }).reduce(_ + _)
+        var newSquareErr = data.map(point => currentModel.squareError(point)).reduce(_ + _)
 
-        var oldSquareErr = 0.0 //it's better to use "0d" for double and 0f for float since it is more explicit
+        var oldSquareErr = 0d
 
         do {
 
             val gradient: DenseVector[Double] = data.map {
                 point => {
 
-                    val sum = (point.label - currentModel.predicts(point)) / dataSize
+                    val sum = (point.label - currentModel(point)) / dataSize
 
                     val shift = DenseVector.zeros[Double](point.length)
                     for (j <- 0 until point.length)
@@ -51,18 +49,16 @@ class LinearRegressionTrainer(private val l2regularization /*l2regularisation is
 
                     shift
                 }
-            }.reduce(_.:+(_)) // wtf??  _+_??
+            }.reduce(_ + _)
 
             oldSquareErr = newSquareErr
 
-            val tmp = nextStep(data, currentModel, gradient, l2regularization, oldSquareErr)
+            val tmp =  stepper.nextStep(data, currentModel, gradient, oldSquareErr)      //FIXME
 
-            // you should have written val (newSquareErr, currentModel) = nextStep(...) -- read more about pattern matching
-            // and I suggest to swap returned values in nextStep. It's common practice to return the most complex object first.
-            newSquareErr = tmp._1
-            currentModel = tmp._2
+            newSquareErr = tmp._2                                                        //FIXME
+            currentModel = tmp._1                                                        //FIXME
 
-        } while (oldSquareErr - newSquareErr > 0.001 /*this is a magic value. You'd better make it a constructor parameter*/ )
+        } while (oldSquareErr - newSquareErr > eps)
 
         currentModel
     }
