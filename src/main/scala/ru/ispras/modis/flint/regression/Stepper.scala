@@ -29,13 +29,18 @@ trait Stepper {
         var newSquareErr = 0.0
 
         do {
+
             alpha = alpha * delta
+
             shiftedModel = new LinearRegressionModel(model.data :+ ((grad :- (model.data  * l2regularization)) * alpha))
-            newSquareErr = data.map(p => {
-                val x = p.label - shiftedModel.predicts(p)
-                x * x
+
+            newSquareErr = data.map(point => {
+                val err = point.label - shiftedModel.predicts(point)
+                err * err
             }).reduce(_ + _)
+
         } while (newSquareErr - oldSquareErr > 0.001 * alpha * normGrad)
+
         (newSquareErr, shiftedModel)
     }
 }

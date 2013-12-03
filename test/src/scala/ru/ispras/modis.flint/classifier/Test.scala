@@ -25,9 +25,10 @@ object Test extends App {
             case (weight, id) => new WeightedFeature(id, weight)
         }.toIndexedSeq, features.last)
     })
+
     //val data1 = (new NormalizingInstancePreprocessor[LabelledInstance[Double]]() :+ new NormalizingInstancePreprocessor[LabelledInstance[Double]]()).apply(data)
-    val now = System.nanoTime()
+
     val x = new RegressionCrossValidator(0.8, 10, DefaultSeedGenerator.getInstance(), MersenneTwistProvider).apply(new LinearRegressionTrainer(0.000001, DefaultSeedGenerator.getInstance(), MersenneTwistProvider), data.cache())
     println(x.rootMeanSquareDeviation)
-    println((System.nanoTime() - now)/1e9)
+
 }

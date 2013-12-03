@@ -30,23 +30,24 @@ class LinearRegressionTrainer(private val l2regularization: Double,
         var currentModel = new LinearRegressionModel(randArray)
 
         var newSquareErr = data.map(point => {
-            val x = point.label - currentModel.predicts(point)
-            x * x
+            val err = point.label - currentModel.predicts(point)
+            err * err
         }).reduce(_ + _)
 
         var oldSquareErr = 0.0
-
-        var i = 0
 
         do {
 
             val gradient: DenseVector[Double] = data.map {
                 point => {
+
                     val sum = (point.label - currentModel.predicts(point)) / dataSize
-                    val t = DenseVector.zeros[Double](point.length)
+
+                    val shift = DenseVector.zeros[Double](point.length)
                     for (j <- 0 until point.length)
-                        t(j) = point(j).featureWeight * sum
-                    t
+                        shift(j) = point(j).featureWeight * sum
+
+                    shift
                 }
             }.reduce(_.:+(_))
 
@@ -56,9 +57,9 @@ class LinearRegressionTrainer(private val l2regularization: Double,
 
             newSquareErr = tmp._1
             currentModel = tmp._2
-            i += 1
+
         } while (oldSquareErr - newSquareErr > 0.001)
-        println(i)
+
         currentModel
     }
 }
