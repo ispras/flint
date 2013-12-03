@@ -9,4 +9,4 @@ import ru.ispras.modis.flint.classifiers.ClassificationResult
  * Time: 14:21
  * To change this template use File | Settings | File Templates.
  */
-class BayesResult[LabelType](label: LabelType, solution : Double)
+class BayesResult[LabelType](label: LabelType, solution : Double)    // WTF??
