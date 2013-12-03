@@ -13,9 +13,9 @@ import scalala.tensor.dense.DenseVector
  * Time: 11:13 PM
  */
 
-class LinearRegressionTrainer(private val l2regularization: Double,
+class LinearRegressionTrainer(private val l2regularization /*l2regularisation is either a term in functional or an approach. This value is a regularisation parameter. It's also often referred as 'lambda'*/ : Double,
                               private val seedGenerator: SeedGenerator,
-                              private val randomGeneratorProvider: RandomGeneratorProvider) extends RegressionTrainer with Stepper{
+                              private val randomGeneratorProvider: RandomGeneratorProvider) extends RegressionTrainer with Stepper /*wtf?*/ {
 
     def apply(data: RDD[LabelledInstance[Double]]): LinearRegressionModel = {
 
@@ -26,15 +26,17 @@ class LinearRegressionTrainer(private val l2regularization: Double,
         val randArray = DenseVector.zeros[Double](data.first().length)
         for (i <- 0 until randArray.length)
             randArray(i) = random.nextDouble()
+        // DenseVector.rand() was not good enough?
 
         var currentModel = new LinearRegressionModel(randArray)
 
         var newSquareErr = data.map(point => {
-            val err = point.label - currentModel.predicts(point)
+            // code duplication. I see the same stuff in stepper.
+            val err = point.label - currentModel.predicts(point) // do not repeat yourself
             err * err
         }).reduce(_ + _)
 
-        var oldSquareErr = 0.0
+        var oldSquareErr = 0.0 //it's better to use "0d" for double and 0f for float since it is more explicit
 
         do {
 
@@ -49,16 +51,18 @@ class LinearRegressionTrainer(private val l2regularization: Double,
 
                     shift
                 }
-            }.reduce(_.:+(_))
+            }.reduce(_.:+(_)) // wtf??  _+_??
 
             oldSquareErr = newSquareErr
 
-            val tmp =  nextStep(data, currentModel, gradient, l2regularization, oldSquareErr)
+            val tmp = nextStep(data, currentModel, gradient, l2regularization, oldSquareErr)
 
+            // you should have written val (newSquareErr, currentModel) = nextStep(...) -- read more about pattern matching
+            // and I suggest to swap returned values in nextStep. It's common practice to return the most complex object first.
             newSquareErr = tmp._1
             currentModel = tmp._2
 
-        } while (oldSquareErr - newSquareErr > 0.001)
+        } while (oldSquareErr - newSquareErr > 0.001 /*this is a magic value. You'd better make it a constructor parameter*/ )
 
         currentModel
     }
