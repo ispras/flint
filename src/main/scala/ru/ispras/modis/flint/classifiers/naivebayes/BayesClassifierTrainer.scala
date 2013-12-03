@@ -21,6 +21,7 @@ class BayesClassifierTrainer[LabelType: ClassManifest](private val data: RDD[Lab
       new BayesClassifier[LabelType](aprioryProbability,trainData)
 
 
+
   }
 
 }
