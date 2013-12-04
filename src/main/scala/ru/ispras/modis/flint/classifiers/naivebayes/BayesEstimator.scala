@@ -4,7 +4,8 @@ import ru.ispras.modis.flint.classifiers.{DensityEstimation, DensityEstimator}
 import ru.ispras.modis.flint.instances.{LabelledInstance, Feature}
 import scala.math.log
 import spark.RDD
-
+import org.scalacheck.Prop.{True, False}
+import scala.math.abs
 class BayesEstimator[LabelType: ClassManifest] extends DensityEstimator[LabelType]{
 
   override def apply(data: RDD[LabelledInstance[LabelType]]) : DensityEstimation[LabelType] = {
@@ -12,11 +13,25 @@ class BayesEstimator[LabelType: ClassManifest] extends DensityEstimator[LabelTyp
     val labelCount = data.map(instance => instance.label).countByValue()
 
     val labelIdWeight :Map[(LabelType,Int,Double), Long] = data.flatMap(instance =>
-      instance.map(feature => (instance.label, feature.featureId, feature.featureWeight ))).countByValue().toMap
+      instance.map(feature => (instance.label, feature.featureId, feature.featureWeight))).countByValue().toMap
+     /*println(labelIdWeight)
+    println(labelIdWeight.size)*/
+     val eps = 0.000001
 
-    val featureLogProb  :Map[(LabelType,Int,Double), Double] = labelIdWeight.map{case ((label, featureId, weight), value) => ((label, featureId,weight),log(value.toDouble/labelCount(label)))}
 
-    new BayesEstimation[LabelType](featureLogProb)
+
+     val addEps = labelIdWeight.map{case ((label,id,weight),prob) => ((label,id, weight + eps),prob)}
+
+     val labelIdFeatureBoolean = labelIdWeight.map{case ((label,id,weight),prob) =>
+
+        ((label,id,if(abs(weight - 1.0) < eps) {true} else if (abs(weight - 1.0) > eps) {false}),prob)}
+
+
+      println(labelIdFeatureBoolean.size)
+      println(labelIdWeight.size)
+    val featureLogProb  :Map[(LabelType,Int,Boolean), Double] = labelIdFeatureBoolean.map{case ((label, featureId, weight:Boolean), value) => ((label, featureId,weight),log(value.toDouble/labelCount(label)))}
+
+    new BinaryEstimation[LabelType](featureLogProb)
  }
 
 }

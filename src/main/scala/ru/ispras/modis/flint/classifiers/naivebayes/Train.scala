@@ -5,6 +5,8 @@ import scala.io.Source
 import ru.ispras.modis.flint.instances.{BinaryFeature, WeightedFeature, LabelledInstance,Instance}
 import java.io.File
 import ru.ispras.modis.flint.crossvalidation.ClassifierCrossValidator
+import org.uncommons.maths.random.DefaultSeedGenerator
+import ru.ispras.modis.flint.random.MersenneTwistProvider
 
 object Train extends App {
 
@@ -34,11 +36,14 @@ object Train extends App {
 
       val train = new BayesEstimator[Int]
 
+      println(train)
+
       val trainClassifier = new BayesClassifierTrainer[Int](data, train).apply(data) //return classifier
 
       val classifier = datatest.map(instance => trainClassifier.apply(instance))
-      /*printf("the result", classifier.map(res => println(res)))
-      new ClassifierCrossValidator[Int]().apply(new BayesClassifierTrainer[Int](data,train),data)   */
+
+
+  //new ClassifierCrossValidator[Int](0.8,60,new java.util.Random()).apply(new BayesClassifierTrainer[Int](data,train),data)
 
 
 }

@@ -10,6 +10,7 @@ class BayesClassifier[LabelType](private val aprioryProbability: Map[LabelType,D
 
     val posteriorProb = aprioryProbability.map{case (label, aprioryProb) => (label, aprioryProb + densityEstimator.apply(label, instance))}.maxBy(_._2)
 
+
     new ClassificationResult[LabelType](posteriorProb._1,Some(exp(posteriorProb._2)))
 
   }
