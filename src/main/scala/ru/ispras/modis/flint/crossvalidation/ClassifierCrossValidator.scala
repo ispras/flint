@@ -14,13 +14,12 @@ import ru.ispras.modis.flint.instances.LabelledInstance
  */
 class ClassifierCrossValidator[LabelType: ClassManifest](private val fractionToTrainOn: Double,
                                                          private val numberOfIterations: Int,
-                                                         private val seedGenerator: SeedGenerator,
-                                                         private val randomGeneratorProvider: RandomGeneratorProvider) extends CrossValidationUtils[LabelType] {
+                                                         private val random: java.util.Random) extends CrossValidationUtils[LabelType] {
     def apply(classifierTrainer: ClassifierTrainer[LabelType], data: RDD[LabelledInstance[LabelType]]) = {
         val labels = data.map(_.label).distinct().collect()
 
         CrossValidationResult.average((0 until numberOfIterations).map(iteration => {
-            val (train, test) = split(data, fractionToTrainOn, randomGeneratorProvider(seedGenerator))
+            val (train, test) = split(data, fractionToTrainOn, random)
             makeIteration(classifierTrainer, train, test, labels)
         }))
     }
@@ -43,3 +42,4 @@ class ClassifierCrossValidator[LabelType: ClassManifest](private val fractionToT
         )
     }
 }
+
