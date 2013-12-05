@@ -13,7 +13,7 @@ import ru.ispras.modis.flint.random.RandomGeneratorProvider
  * Time: 11:14 PM
  */
 
-object RegressionCrossValidator extends CrossValidationUtils[Double]{
+object RegressionCrossValidator extends CrossValidationUtils[Double]{  // swap object and class. It's always better to put useful for user classes and method first.
     private def makeIteration(regressionTrainer: RegressionTrainer, train: RDD[LabelledInstance[Double]], test: RDD[LabelledInstance[Double]]) = {
         val model = regressionTrainer(train)
         test.map(labelled => (labelled.label, model(labelled))).map {

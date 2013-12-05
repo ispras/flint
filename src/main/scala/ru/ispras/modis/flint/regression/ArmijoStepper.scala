@@ -16,7 +16,7 @@ import scalala.tensor.dense.DenseVector
 class ArmijoStepper(private val lambda: Double = 1e-6,
                     private val alpha: Double = 1.0,
                     private val delta: Double = 0.5,
-                    private val eta: Double = 1e-3) extends Stepper{
+                    private val eta: Double = 1e-3) extends Stepper{     // eta? wat's that?
 
 
     def nextStep(data: RDD[LabelledInstance[Double]],
@@ -26,9 +26,9 @@ class ArmijoStepper(private val lambda: Double = 1e-6,
 
         var shift = alpha
 
-        val normGrad = (grad :* grad).sum         //FIXME
+        val normGrad = (grad :* grad).sum         //FIXME grad.norm(2) was not good enough?    and it's squared norm
 
-        var shiftedModel = new LinearRegressionModel(DenseVector.zeros[Double](model.weights.length))
+        var shiftedModel = new LinearRegressionModel(DenseVector.zeros[Double](model.weights.length))  //
 
         var newSquareErr = 0d
 
