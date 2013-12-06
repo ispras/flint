@@ -13,22 +13,21 @@ import scalala.tensor.dense.DenseVector
  */
 
 
-class ArmijoStepper(private val lambda: Double = 1e-6,
+class ArmijoStepper(private val lambda: Double = 1e-5,
                     private val alpha: Double = 1.0,
                     private val delta: Double = 0.5,
-                    private val eta: Double = 1e-3) extends Stepper{     // eta? wat's that?
-
+                    private val eps: Double = 1e-3) extends Stepper{
 
     def nextStep(data: RDD[LabelledInstance[Double]],
-                 model : LinearRegressionModel,
+                 model : LinearRegressionModelUnderTraining,
                  grad : DenseVector[Double],
                  oldSquareErr: Double) = {
 
         var shift = alpha
 
-        val normGrad = (grad :* grad).sum         //FIXME grad.norm(2) was not good enough?    and it's squared norm
+        val normGrad = grad.norm(2)
 
-        var shiftedModel = new LinearRegressionModel(DenseVector.zeros[Double](model.weights.length))  //
+        var shiftedModel = new LinearRegressionModelUnderTraining(DenseVector.zeros[Double](model.weights.length))  //
 
         var newSquareErr = 0d
 
@@ -36,11 +35,11 @@ class ArmijoStepper(private val lambda: Double = 1e-6,
 
             shift *= delta
 
-            shiftedModel = new LinearRegressionModel(model.weights :+ ((grad :- (model.weights  * lambda)) * shift))
+            shiftedModel = new LinearRegressionModelUnderTraining(model.weights :+ ((grad :- (model.weights  * lambda)) * shift))
 
             newSquareErr = data.map(point => shiftedModel.squareError(point)).reduce(_ + _)
 
-        } while (newSquareErr - oldSquareErr > eta * shift * normGrad)
+        } while (newSquareErr - oldSquareErr > eps * shift * normGrad)
 
         (shiftedModel, newSquareErr)
     }

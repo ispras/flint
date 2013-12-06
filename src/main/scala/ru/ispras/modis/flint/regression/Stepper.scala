@@ -13,7 +13,7 @@ import scalala.tensor.dense.DenseVector
 trait Stepper {
 
     def nextStep(data: RDD[LabelledInstance[Double]],
-                 model : LinearRegressionModel, //FIXME
+                 model : LinearRegressionModelUnderTraining,
                  grad : DenseVector[Double],
-                 oldSquareErr: Double) : (LinearRegressionModel, Double)
+                 oldSquareErr: Double) : (LinearRegressionModelUnderTraining, Double)
 }

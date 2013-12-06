@@ -16,6 +16,7 @@ import ru.ispras.modis.flint.random.MersenneTwistProvider
  */
 
 class LinearRegressionTrainer(private val eps: Double = 1e-2,
+                              private val maxStepNum: java.lang.Integer = 500,
                               private val stepper:Stepper = new ArmijoStepper,
                               private val seedGenerator: SeedGenerator = DefaultSeedGenerator.getInstance(),
                               private val randomGeneratorProvider: RandomGeneratorProvider = MersenneTwistProvider) extends RegressionTrainer{
@@ -30,13 +31,17 @@ class LinearRegressionTrainer(private val eps: Double = 1e-2,
         for (i <- 0 until randArray.length)
             randArray(i) = random.nextDouble()
 
-        var currentModel = new LinearRegressionModel(randArray)
+        var currentModel = new LinearRegressionModelUnderTraining(randArray)
 
         var newSquareErr = data.map(point => currentModel.squareError(point)).reduce(_ + _)
 
         var oldSquareErr = 0d
 
+        var i = 0
+
         do {
+
+            i += 1
 
             val gradient: DenseVector[Double] = data.map {
                 point => {
@@ -58,7 +63,7 @@ class LinearRegressionTrainer(private val eps: Double = 1e-2,
             newSquareErr = tmp._2                                                        //FIXME
             currentModel = tmp._1                                                        //FIXME
 
-        } while (oldSquareErr - newSquareErr > eps)
+        } while (i < maxStepNum && oldSquareErr - newSquareErr > eps)
 
         currentModel
     }
