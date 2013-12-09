@@ -12,10 +12,11 @@ class BayesEstimator[LabelType: ClassManifest] extends DensityEstimator[LabelTyp
 
     val labelCount = data.map(instance => instance.label).countByValue()
 
-    val labelIdWeight :Map[(LabelType,Int,Double), Long] = data.flatMap(instance =>
-      instance.map(feature => (instance.label, feature.featureId, feature.featureWeight))).countByValue().toMap
-     /*println(labelIdWeight)
-    println(labelIdWeight.size)*/
+    val labelIdWeight: Map[(LabelType,Int,Double),Long] = data.flatMap(instance =>
+      instance.map(feature =>  (instance.label, feature.featureId, feature.featureWeight))).countByValue().toMap
+
+
+
      val eps = 0.000001
 
      val addEps = labelIdWeight.map{case ((label,id,weight),prob) => ((label,id, weight + eps),prob)}
@@ -24,10 +25,10 @@ class BayesEstimator[LabelType: ClassManifest] extends DensityEstimator[LabelTyp
 
         if(abs(weight - 1.0) < eps) {((label,id,true),prob)} else {((label,id,false),prob)}}
 
+    val featureLogProb  :Map[(LabelType,Int,Boolean), Double] = labelIdFeatureBoolean.map{case ((label, featureId, weight), value) =>
 
-      println(labelIdFeatureBoolean)
-      println(labelIdWeight)
-    val featureLogProb  :Map[(LabelType,Int,Boolean), Double] = labelIdFeatureBoolean.map{case ((label, featureId, weight), value) => ((label, featureId,weight),log(value.toDouble/labelCount(label)))}
+      if (value != 0) {((label, featureId,weight),log(value.toDouble/labelCount(label)))} else {((label, featureId,weight),log(1.0/labelCount(label)))}}
+
 
     new BinaryEstimation[LabelType](featureLogProb)
  }
