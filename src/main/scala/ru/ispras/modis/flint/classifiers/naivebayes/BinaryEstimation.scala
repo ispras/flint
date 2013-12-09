@@ -11,5 +11,4 @@ class BinaryEstimation[LabelType](private val logFeatureProbability: Map[(LabelT
 
     }
 
-
 }

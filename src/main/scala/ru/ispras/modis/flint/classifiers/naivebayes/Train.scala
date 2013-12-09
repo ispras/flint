@@ -36,10 +36,8 @@ object Train extends App {
 
       val train = new BayesEstimator[Int]
 
-      println(train)
-
       val trainClassifier = new BayesClassifierTrainer[Int](data, train).apply(data) //return classifier
-       println(trainClassifier)
+
       val classifier = datatest.map(instance => trainClassifier.apply(instance))
 
       println(classifier)

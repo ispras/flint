@@ -18,8 +18,6 @@ class BayesEstimator[LabelType: ClassManifest] extends DensityEstimator[LabelTyp
     println(labelIdWeight.size)*/
      val eps = 0.000001
 
-
-
      val addEps = labelIdWeight.map{case ((label,id,weight),prob) => ((label,id, weight + eps),prob)}
 
      val labelIdFeatureBoolean = labelIdWeight.map{case((label,id,weight),prob) =>

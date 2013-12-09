@@ -13,7 +13,7 @@ class BayesClassifierTrainer[LabelType: ClassManifest](private val data: RDD[Lab
 
 
       val trainData = new BayesEstimator[LabelType].apply(data)
-       println(trainData)
+
       val size = labelCount.map(_._2).sum
 
       val aprioryProbability: Map[LabelType,Double] = labelCount.map{case(label, freq) => (label, math.log(freq.toDouble/size))}.toMap
