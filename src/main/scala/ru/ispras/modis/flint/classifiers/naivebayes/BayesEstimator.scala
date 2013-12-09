@@ -15,7 +15,9 @@ class BayesEstimator[LabelType: ClassManifest] extends DensityEstimator[LabelTyp
     val labelIdWeight: Map[(LabelType,Int,Double),Long] = data.flatMap(instance =>
       instance.map(feature =>  (instance.label, feature.featureId, feature.featureWeight))).countByValue().toMap
 
+    labelIdWeight.map{case ((label,id,weight),value) =>
 
+      if(!labelIdWeight.contains((label,id,1.0-weight))) {labelIdWeight += ((label,id,weight) -> 1.0)}} //this don't compile because of +=. how can i add the pair to map another way?
 
      val eps = 0.000001
 
