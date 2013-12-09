@@ -22,14 +22,14 @@ class BayesEstimator[LabelType: ClassManifest] extends DensityEstimator[LabelTyp
 
      val addEps = labelIdWeight.map{case ((label,id,weight),prob) => ((label,id, weight + eps),prob)}
 
-     val labelIdFeatureBoolean = labelIdWeight.map{case ((label,id,weight),prob) =>
+     val labelIdFeatureBoolean = labelIdWeight.map{case((label,id,weight),prob) =>
 
-        ((label,id,if(abs(weight - 1.0) < eps) {true} else if (abs(weight - 1.0) > eps) {false}),prob)}
+        if(abs(weight - 1.0) < eps) {((label,id,true),prob)} else {((label,id,false),prob)}}
 
 
-      println(labelIdFeatureBoolean.size)
-      println(labelIdWeight.size)
-    val featureLogProb  :Map[(LabelType,Int,Boolean), Double] = labelIdFeatureBoolean.map{case ((label, featureId, weight:Boolean), value) => ((label, featureId,weight),log(value.toDouble/labelCount(label)))}
+      println(labelIdFeatureBoolean)
+      println(labelIdWeight)
+    val featureLogProb  :Map[(LabelType,Int,Boolean), Double] = labelIdFeatureBoolean.map{case ((label, featureId, weight), value) => ((label, featureId,weight),log(value.toDouble/labelCount(label)))}
 
     new BinaryEstimation[LabelType](featureLogProb)
  }

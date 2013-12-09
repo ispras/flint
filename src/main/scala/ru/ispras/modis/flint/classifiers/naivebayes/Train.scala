@@ -39,10 +39,10 @@ object Train extends App {
       println(train)
 
       val trainClassifier = new BayesClassifierTrainer[Int](data, train).apply(data) //return classifier
-
+       println(trainClassifier)
       val classifier = datatest.map(instance => trainClassifier.apply(instance))
 
-
+      println(classifier)
   //new ClassifierCrossValidator[Int](0.8,60,new java.util.Random()).apply(new BayesClassifierTrainer[Int](data,train),data)
 
 
