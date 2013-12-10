@@ -4,10 +4,10 @@ package ru.ispras.modis.flint.classifiers.naivebayes
 import scala.{Double, Int}
 
 
-trait AddOneToMap[K,B] extends Map[K,B] {
+trait AddOneToMap[K] extends Map[K,Long] {
 
-
-
-    abstract override def +[B1 >: B](kv: (K, B1)): Map[K, B1] = super.+(kv)
+    abstract override def get(key: K) = super.get(key)+1.0//smth wrong with add 1
 
 }
+
+
