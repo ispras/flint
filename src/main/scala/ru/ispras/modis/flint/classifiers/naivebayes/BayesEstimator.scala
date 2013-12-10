@@ -6,19 +6,27 @@ import scala.math.log
 import spark.RDD
 import org.scalacheck.Prop.{True, False}
 import scala.math.abs
+
 class BayesEstimator[LabelType: ClassManifest] extends DensityEstimator[LabelType]{
+
+
 
   override def apply(data: RDD[LabelledInstance[LabelType]]) : DensityEstimation[LabelType] = {
 
     val labelCount = data.map(instance => instance.label).countByValue()
 
-    val labelIdWeight: Map[(LabelType,Int,Double),Long] = data.flatMap(instance =>
+    var labelIdWeight: Map[(LabelType,Int,Double),Long] = data.flatMap(instance =>
+
       instance.map(feature =>  (instance.label, feature.featureId, feature.featureWeight))).countByValue().toMap
 
-    labelIdWeight.map{case ((label,id,weight),value) =>
+      labelIdWeight.flatMap{case ((label,id,weight),value) =>
 
-      if(!labelIdWeight.contains((label,id,1.0-weight))) {labelIdWeight += ((label,id,weight) -> 1.0)}} //this don't compile because of +=. how can i add the pair to map another way?
+                val kv = ((label,id,1.0-weight),labelIdWeight.get((label,id,1.0-weight)))
 
+             labelIdWeight.+(kv)
+      }  // i can't add elements to map
+
+      labelIdWeight.foreach(println)
      val eps = 0.000001
 
      val addEps = labelIdWeight.map{case ((label,id,weight),prob) => ((label,id, weight + eps),prob)}
