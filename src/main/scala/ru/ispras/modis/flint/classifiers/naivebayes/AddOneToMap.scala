@@ -7,10 +7,12 @@ trait AddOneToMap[K] extends Map[K,Long] {
   abstract override def get(key: K): Option[Long] =  {
 
     val x: Option[Long] = super.get(key)
+    x match {
 
-    if (x.isEmpty) Some(1)
+     case None => Some(1)
 
-      else x.map(_+1)
+     case _ => x.map(_+1)
+    }
   }
 
   abstract override def iterator: Iterator[(K, Long)] = super.iterator
