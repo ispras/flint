@@ -3,7 +3,7 @@ import scala.{Double, Int}
 import scala.collection.immutable.HashMap
 
 
-class AddOneToMap[K] extends HashMap[K,Long] {
+class AddOneToMap[K] extends Map[K,Long] {
 
   override def get(key: K): Option[Long] =  {
 
