@@ -27,7 +27,7 @@ class ArmijoStepper(private val lambda: Double = 1e-5,
 
         val normGrad = grad.norm(2)
 
-        var shiftedModel = new LinearRegressionModelUnderTraining(DenseVector.zeros[Double](model.weights.length))  //
+        var shiftedModel = new LinearRegressionModelUnderTraining(DenseVector.zeros[Double](model.weights.length))
 
         var newSquareErr = 0d
 

@@ -49,8 +49,8 @@ class LinearRegressionTrainer(private val eps: Double = 1e-2,
                     val sum = (point.label - currentModel(point)) / dataSize
 
                     val shift = DenseVector.zeros[Double](point.length)
-                    for (j <- 0 until point.length)
-                        shift(j) = point(j).featureWeight * sum
+                    for (j <- point)
+                        shift(j.featureId) = j.featureWeight * sum
 
                     shift
                 }
@@ -58,10 +58,10 @@ class LinearRegressionTrainer(private val eps: Double = 1e-2,
 
             oldSquareErr = newSquareErr
 
-            val tmp =  stepper.nextStep(data, currentModel, gradient, oldSquareErr)      //FIXME
+            val tmp =  stepper.nextStep(data, currentModel, gradient, oldSquareErr)
 
-            newSquareErr = tmp._2                                                        //FIXME
-            currentModel = tmp._1                                                        //FIXME
+            newSquareErr = tmp._2
+            currentModel = tmp._1
 
         } while (i < maxStepNum && oldSquareErr - newSquareErr > eps)
 

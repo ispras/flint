@@ -8,7 +8,7 @@ import ru.ispras.modis.flint.instances.Instance
  * Date: 7/27/13
  * Time: 12:00 AM
  */
-class EuclideanDistance extends Distance {
+object EuclideanDistance extends Distance {
     def apply(first: Instance, second: Instance): Double = {
         val firstMap = instanceToMap(first)
         val secondMap = instanceToMap(second)
