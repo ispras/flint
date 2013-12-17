@@ -1,5 +1,7 @@
 package ru.ispras.modis.flint.classifiers
 
+import ru.ispras.modis.flint.instances.Instance
+
 /**
  * Created with IntelliJ IDEA.
  * User: valerij
@@ -7,5 +9,5 @@ package ru.ispras.modis.flint.classifiers
  * Time: 8:49 PM
  */
 trait DensityEstimation[LabelType] {
-    def apply(label: LabelType, featureId: Int, value: Double): Double
+    def apply(label: LabelType, instance : Instance): Double
 }
