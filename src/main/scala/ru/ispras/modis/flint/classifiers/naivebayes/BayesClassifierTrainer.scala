@@ -3,7 +3,7 @@ package ru.ispras.modis.flint.classifiers.naivebayes
 import ru.ispras.modis.flint.classifiers.{DensityEstimator, DensityEstimation, Classifier, ClassifierTrainer}
 import ru.ispras.modis.flint.instances.LabelledInstance
 import scala.math.log
-import spark.RDD
+import org.apache.spark.rdd.RDD
 
 class BayesClassifierTrainer[LabelType: ClassManifest](/*private val data: RDD[LabelledInstance[LabelType]], */ private val densityEstimator: DensityEstimator[LabelType]) extends ClassifierTrainer[LabelType] {
 

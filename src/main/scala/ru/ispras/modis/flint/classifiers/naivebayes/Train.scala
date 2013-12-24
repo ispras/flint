@@ -1,6 +1,6 @@
 package modis.flint.classifiers.naivebayes
 
-import spark.SparkContext
+import org.apache.spark.SparkContext
 import scala.io.Source
 import ru.ispras.modis.flint.instances.{BinaryFeature, WeightedFeature, LabelledInstance,Instance}
 

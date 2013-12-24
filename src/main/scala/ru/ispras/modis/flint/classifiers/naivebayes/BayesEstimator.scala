@@ -3,7 +3,7 @@ package ru.ispras.modis.flint.classifiers.naivebayes
 import ru.ispras.modis.flint.classifiers.{DensityEstimation, DensityEstimator}
 import ru.ispras.modis.flint.instances.{LabelledInstance, Feature}
 import scala.math.log
-import spark.RDD
+import org.apache.spark.rdd.RDD
 import org.scalacheck.Prop.{True, False}
 import scala.math.abs
 
