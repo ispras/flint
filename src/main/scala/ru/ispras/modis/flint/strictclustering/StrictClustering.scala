@@ -10,5 +10,5 @@ import ru.ispras.modis.flint.instances.Instance
  * Time: 11:58 PM
  */
 trait StrictClustering {
-    def apply(data: RDD[Instance]): Seq[RDD[Instance]]
+    def apply(data: RDD[Instance]): RDD[(Int, Seq[Instance])]
 }
