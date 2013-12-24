@@ -1,7 +1,7 @@
 package ru.ispras.modis.flint.classifiers
 
 import ru.ispras.modis.flint.instances.LabelledInstance
-import spark.RDD
+import org.apache.spark.rdd.RDD
 
 /**
  * Created with IntelliJ IDEA.

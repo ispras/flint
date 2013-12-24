@@ -1,7 +1,7 @@
 package ru.ispras.modis.flint.datapreprocessors
 
-import spark.RDD
-import spark.SparkContext.rddToPairRDDFunctions
+import org.apache.spark.rdd.RDD
+import org.apache.spark.SparkContext.rddToPairRDDFunctions
 import ru.ispras.modis.flint.instances.{InstanceBuilder, WeightedFeature, Instance}
 
 /**
