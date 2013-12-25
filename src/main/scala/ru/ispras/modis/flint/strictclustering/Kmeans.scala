@@ -1,11 +1,7 @@
 package ru.ispras.modis.flint.strictclustring
 
 import org.apache.spark.rdd.RDD
-import ru.ispras.modis.flint.instances.{WeightedFeature, Instance, LabelledInstance}
-import ru.ispras.modis.flint.random.MersenneTwistProvider
-import org.uncommons.maths.random.DefaultSeedGenerator
-import org.uncommons.maths.random.SeedGenerator
-import ru.ispras.modis.flint.random.RandomGeneratorProvider
+import ru.ispras.modis.flint.instances.{WeightedFeature, Instance}
 import org.apache.spark.SparkContext.rddToPairRDDFunctions
 
 /**
@@ -16,26 +12,29 @@ import org.apache.spark.SparkContext.rddToPairRDDFunctions
  * To change this template use File | Settings | File Templates.
  */
 
-class Kmeans(private val k: Int,
+class Kmeans(private val k: Int, // KMeans
              private val eps:Double,
-             private val seed:Int = 0,
+             private val seed: Int = 0, // what seed? randomSeed! And it should be current time by default.
              private val distance: Distance = EuclideanDistance) extends StrictClustering{
 
     def apply(data: RDD[Instance]): RDD[(Int, Seq[Instance])] = {
 
-        val calcDistance = distance
+        val calcDistance = distance // WTF? distance was not good enough?
 
         val centers = data.takeSample(false, k, seed)
 
-        var Dist = 0d
+        var Dist = 0d // why so capitalized?
 
         do {
 
             val closest = data.map(point => {
-                var bestIdx = 0
-                var closest = Double.PositiveInfinity
+                // closest what?
+                var bestIdx = 0 // index of what?
+                var closest = Double.PositiveInfinity // closest what? Centroid? I doubt
                 for (i <- 0 until centers.length) {
-                    val tmpDist = calcDistance(point, centers(i))
+                    // at this point a new Range will be instantiated every single time.
+                    // whether rewrite this as loop or create a single Range and broadcast it to slaves.
+                    val tmpDist = calcDistance(point, centers(i)) // damn! Every time you use 'tmp' a God reduces a boob.
                     if (tmpDist < closest) {
                         closest = tmpDist
                         bestIdx = i
@@ -47,7 +46,7 @@ class Kmeans(private val k: Int,
             val countPoints = closest.countByKey()
 
             val newCenters = closest.reduceByKey((x:Instance, y:Instance) => {
-                val tmp = new Array[Double](x.length)                   //FIXME: rewrite to smth like EuclideDistance
+                val tmp = new Array[Double](x.length) //FIXME: rewrite to smth like EuclideDistance // I second this.
                 for (i <- x) {
                     tmp(i.featureId) += i.featureWeight
                 }
@@ -58,14 +57,16 @@ class Kmeans(private val k: Int,
                     case (weight, id) => new WeightedFeature(id, weight)
                 }.toIndexedSeq)
             }).map(point => {
+                // case(bla,bla)
 
                 (point._1, new Instance(point._2.map{ tmp => new WeightedFeature(tmp.featureId, tmp.featureWeight / countPoints(point._1))}.toIndexedSeq))
 
             }).collectAsMap()
 
-            Dist = 0.0
+            Dist = 0.0 //0d
 
             for (i <- 0 until k) {
+                // the same stuff. A new Range for each call.
 
                 Dist += calcDistance(centers(i), newCenters(i))
             }
@@ -77,6 +78,8 @@ class Kmeans(private val k: Int,
         } while (Dist > eps)
 
         val closest = data.map(point => {
+            // this looks like code duplication. Create a function for that stuff.
+            // and divide the algorithm into methods -- calculate closest centroids, find new centroids
             var bestIdx = 0
             var closest = Double.PositiveInfinity
             for (i <- 0 until centers.length) {
