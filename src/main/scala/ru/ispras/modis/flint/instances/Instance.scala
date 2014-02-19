@@ -12,7 +12,7 @@ package ru.ispras.modis.flint.instances
  * Do not forget to implement InstanceBuilder trait for every
  * inheritor and to implement the corresponding implicit method in InstanceBuilder object
  */
-class Instance(private val featuresToWeights: IndexedSeq[Feature]) extends IndexedSeq[Feature] with Serializable { // why Serializable?
+class Instance(private val featuresToWeights: IndexedSeq[Feature]) extends IndexedSeq[Feature] with Serializable {
     override def iterator: Iterator[Feature] = featuresToWeights.iterator
 
     def length: Int = featuresToWeights.length
