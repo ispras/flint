@@ -1,8 +1,10 @@
 package ru.ispras.modis.flint.strictclustring
 
 import org.apache.spark.rdd.RDD
-import ru.ispras.modis.flint.instances.{WeightedFeature, Instance}
+import ru.ispras.modis.flint.instances.{Instance, WeightedFeature}
 import org.apache.spark.SparkContext.rddToPairRDDFunctions
+
+import java.lang.System
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,87 +14,80 @@ import org.apache.spark.SparkContext.rddToPairRDDFunctions
  * To change this template use File | Settings | File Templates.
  */
 
-class Kmeans(private val k: Int, // KMeans
+class KMeans(private val k: Int,
              private val eps:Double,
-             private val seed: Int = 0, // what seed? randomSeed! And it should be current time by default.
-             private val distance: Distance = EuclideanDistance) extends StrictClustering{
+             private val randomSeed: Int = System.currentTimeMillis().asInstanceOf[Int], // dont know how to get current time in Int. It looks like unsafe
+             private val distance: Distance = EuclideanDistance) extends StrictClustering with Serializable{
+
+
+    private def calcClosestCentroids(data: RDD[Instance],
+                                     centroids:Array[Instance],
+                                     kMeansRange:Range):RDD[(Int, Instance)] ={
+        data.map(point => {
+            var bestIdxOfCentroids = 0
+            var closestDist = Double.PositiveInfinity
+            for (i <- kMeansRange) {
+                val currDist = distance(point, centroids(i))
+                if (currDist < closestDist) {
+                    closestDist = currDist
+                    bestIdxOfCentroids = i
+                }
+            }
+            (bestIdxOfCentroids, point)
+        })
+    }
+
+    private def findNewCentroids(closestCentroid:RDD[(Int, Instance)]) = {
+
+        val countPoints = closestCentroid.countByKey()
+
+        closestCentroid.reduceByKey((x:Instance, y:Instance) => {
+            val tmp = new Array[Double](x.length) //FIXME: rewrite to smth like EuclideDistance // I second this. // dont know how to fix it
+            for (i <- x) {
+                tmp(i.featureId) += i.featureWeight
+            }
+            for (i <- y) {
+                tmp(i.featureId) += i.featureWeight
+            }
+            new Instance(tmp.zipWithIndex.map {
+                case (weight, id) => new WeightedFeature(id, weight)
+            }.toIndexedSeq)
+        }).map(point => {
+            //case(bla, bla) //WTF?
+
+            (point._1, new Instance(point._2.map{ tmp => new WeightedFeature(tmp.featureId, tmp.featureWeight / countPoints(point._1))}.toIndexedSeq))
+
+        }).collectAsMap()
+    }
 
     def apply(data: RDD[Instance]): RDD[(Int, Seq[Instance])] = {
 
-        val calcDistance = distance // WTF? distance was not good enough?
+        val centroids = data.takeSample(false, k, randomSeed)
 
-        val centers = data.takeSample(false, k, seed)
-
-        var Dist = 0d // why so capitalized?
-
+        val kMeansRange = 0 until k
+        var dist = 0d
         do {
 
-            val closest = data.map(point => {
-                // closest what?
-                var bestIdx = 0 // index of what?
-                var closest = Double.PositiveInfinity // closest what? Centroid? I doubt
-                for (i <- 0 until centers.length) {
-                    // at this point a new Range will be instantiated every single time.
-                    // whether rewrite this as loop or create a single Range and broadcast it to slaves.
-                    val tmpDist = calcDistance(point, centers(i)) // damn! Every time you use 'tmp' a God reduces a boob.
-                    if (tmpDist < closest) {
-                        closest = tmpDist
-                        bestIdx = i
-                    }
-                }
-                (bestIdx, point)
-            })
+            val closestCentroid = calcClosestCentroids(data, centroids, kMeansRange)
 
-            val countPoints = closest.countByKey()
+            val newCenters = findNewCentroids(closestCentroid)
 
-            val newCenters = closest.reduceByKey((x:Instance, y:Instance) => {
-                val tmp = new Array[Double](x.length) //FIXME: rewrite to smth like EuclideDistance // I second this.
-                for (i <- x) {
-                    tmp(i.featureId) += i.featureWeight
-                }
-                for (i <- y) {
-                    tmp(i.featureId) += i.featureWeight
-                }
-                new Instance(tmp.zipWithIndex.map {
-                    case (weight, id) => new WeightedFeature(id, weight)
-                }.toIndexedSeq)
-            }).map(point => {
-                // case(bla,bla)
+            dist = 0d
 
-                (point._1, new Instance(point._2.map{ tmp => new WeightedFeature(tmp.featureId, tmp.featureWeight / countPoints(point._1))}.toIndexedSeq))
+            for (i <- kMeansRange) {
 
-            }).collectAsMap()
-
-            Dist = 0.0 //0d
-
-            for (i <- 0 until k) {
-                // the same stuff. A new Range for each call.
-
-                Dist += calcDistance(centers(i), newCenters(i))
+                dist += distance(centroids(i), newCenters(i))
             }
 
             for (i <- newCenters) {
-                centers(i._1) = i._2
+                centroids(i._1) = i._2
             }
 
-        } while (Dist > eps)
+        } while (dist > eps)
 
-        val closest = data.map(point => {
-            // this looks like code duplication. Create a function for that stuff.
-            // and divide the algorithm into methods -- calculate closest centroids, find new centroids
-            var bestIdx = 0
-            var closest = Double.PositiveInfinity
-            for (i <- 0 until centers.length) {
-                val tmpDist = calcDistance(point, centers(i))
-                if (tmpDist < closest) {
-                    closest = tmpDist
-                    bestIdx = i
-                }
-            }
-            (bestIdx, point)
-        })
+        val closestCentroid = calcClosestCentroids(data, centroids, kMeansRange)
 
-        closest.groupByKey()
+        closestCentroid.groupByKey()
     }
 
 }
