@@ -42,20 +42,20 @@ class KMeans(private val k: Int,
         val countPoints = closestCentroid.countByKey()
 
         closestCentroid.reduceByKey((x:Instance, y:Instance) => {
-            val tmp = new Array[Double](x.length) //FIXME: rewrite to smth like EuclideDistance // I second this. // dont know how to fix it
+            val sum = new Array[Double](x.length) //FIXME: rewrite to smth like EuclideDistance // I second this. // dont know how to fix it
             for (i <- x) {
-                tmp(i.featureId) += i.featureWeight
+                sum(i.featureId) += i.featureWeight
             }
             for (i <- y) {
-                tmp(i.featureId) += i.featureWeight
+                sum(i.featureId) += i.featureWeight
             }
-            new Instance(tmp.zipWithIndex.map {
+            new Instance(sum.zipWithIndex.map {
                 case (weight, id) => new WeightedFeature(id, weight)
             }.toIndexedSeq)
         }).map(point => {
             //case(bla, bla) //WTF?
 
-            (point._1, new Instance(point._2.map{ tmp => new WeightedFeature(tmp.featureId, tmp.featureWeight / countPoints(point._1))}.toIndexedSeq))
+            (point._1, new Instance(point._2.map{ feature => new WeightedFeature(feature.featureId, feature.featureWeight / countPoints(point._1))}.toIndexedSeq))
 
         }).collectAsMap()
     }
