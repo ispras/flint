@@ -1,4 +1,4 @@
-package ru.ispras.modis.flint.strictclustring
+package ru.ispras.modis.flint.strictclustering
 
 import org.apache.spark.rdd.RDD
 import ru.ispras.modis.flint.instances.Instance
