@@ -1,5 +1,7 @@
 package ru.ispras.modis.flint.instances
 
+import breeze.linalg._
+import breeze.collection.mutable.SparseArray
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,6 +16,14 @@ object InstanceOp {
 
         val firstMap = instanceToMap(first)
         val secondMap = instanceToMap(second)
+
+        val r:SparseArray[Double]
+        for (i <- first)
+            r(i.featureId) += i.featureWeight
+        for (i <- second)
+            r(i.featureId) += i.featureWeight
+
+
 
         val x = (firstMap.keySet ++ secondMap.keySet).map(i => (i, firstMap.getOrElse(i, 0d) + secondMap.getOrElse(i, 0d))).toMap
 

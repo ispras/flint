@@ -1,7 +1,7 @@
 package ru.ispras.modis.flint.regression
 
 import ru.ispras.modis.flint.instances.Instance
-import scalala.tensor.dense.DenseVector
+
 /**
  * Created with IntelliJ IDEA.
  * User: valerij

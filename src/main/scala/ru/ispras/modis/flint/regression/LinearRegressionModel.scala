@@ -1,8 +1,7 @@
 package ru.ispras.modis.flint.regression
 
 import ru.ispras.modis.flint.instances.Instance
-import scalala.tensor.dense.DenseVector
-import ru.ispras.modis.flint.instances.LabelledInstance
+import breeze.linalg.DenseVector
 
 /**
  * Created with IntelliJ IDEA.
@@ -15,7 +14,7 @@ class LinearRegressionModel(private[regression] val weights: DenseVector[Double]
     def apply(instance: Instance): Double = {
         var sum = 0.0
         for (i <- instance)
-            sum  += weights(i.featureId) * i.featureWeight
+            sum += weights(i.featureId) * i.featureWeight
         sum
     }
 

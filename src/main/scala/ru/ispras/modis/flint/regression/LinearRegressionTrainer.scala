@@ -4,7 +4,7 @@ import ru.ispras.modis.flint.instances.LabelledInstance
 import org.apache.spark.rdd.RDD
 import ru.ispras.modis.flint.random.RandomGeneratorProvider
 import org.uncommons.maths.random.SeedGenerator
-import scalala.tensor.dense.DenseVector
+import breeze.linalg.DenseVector
 import org.uncommons.maths.random.DefaultSeedGenerator
 import ru.ispras.modis.flint.random.MersenneTwistProvider
 
@@ -27,7 +27,11 @@ class LinearRegressionTrainer(private val eps: Double = 1e-2,
 
         val dataSize = data.count()
 
-        val randArray = DenseVector.zeros[Double](data.first().length)
+        val numDimensions = data.reduce(
+            (x, y) => if (x.last.featureId > y.last.featureId) x else y
+        ).last.featureId + 1
+
+        val randArray = DenseVector.zeros[Double](numDimensions)
         for (i <- 0 until randArray.length)
             randArray(i) = random.nextDouble()
 
@@ -48,7 +52,7 @@ class LinearRegressionTrainer(private val eps: Double = 1e-2,
 
                     val sum = (point.label - currentModel(point)) / dataSize
 
-                    val shift = DenseVector.zeros[Double](point.length)
+                    val shift = DenseVector.zeros[Double](numDimensions)
                     for (j <- point)
                         shift(j.featureId) = j.featureWeight * sum
 

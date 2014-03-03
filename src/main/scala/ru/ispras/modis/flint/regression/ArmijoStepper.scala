@@ -2,7 +2,7 @@ package ru.ispras.modis.flint.regression
 
 import org.apache.spark.rdd.RDD
 import ru.ispras.modis.flint.instances.LabelledInstance
-import scalala.tensor.dense.DenseVector
+import breeze.linalg.DenseVector
 
 /**
  * Created with IntelliJ IDEA.
