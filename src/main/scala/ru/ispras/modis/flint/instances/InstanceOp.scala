@@ -17,11 +17,11 @@ object InstanceOp {
         val firstMap = instanceToMap(first)
         val secondMap = instanceToMap(second)
 
-        val r:SparseArray[Double]
-        for (i <- first)
-            r(i.featureId) += i.featureWeight
-        for (i <- second)
-            r(i.featureId) += i.featureWeight
+//        val r:SparseArray[Double]
+//        for (i <- first)
+//            r(i.featureId) += i.featureWeight
+//        for (i <- second)
+//            r(i.featureId) += i.featureWeight
 
 
 
