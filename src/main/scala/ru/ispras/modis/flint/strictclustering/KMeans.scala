@@ -2,7 +2,7 @@ package ru.ispras.modis.flint.strictclustering
 
 
 import org.apache.spark.rdd.RDD
-import ru.ispras.modis.flint.instances.{InstanceOp, Instance, WeightedFeature}
+import ru.ispras.modis.flint.instances.{Instance, WeightedFeature}
 import org.apache.spark.SparkContext.rddToPairRDDFunctions
 
 import java.lang.System
@@ -42,7 +42,7 @@ class KMeans(private val k: Int,
 
         val sizeOfClusters = closestCentroid.countByKey()
 
-        closestCentroid.reduceByKey(InstanceOp.sum).map{
+        closestCentroid.reduceByKey(_ + _).map{
             case (index, summarizedPoint) =>
 
             (index, new Instance(summarizedPoint.map{ feature => new WeightedFeature(feature.featureId, feature.featureWeight / sizeOfClusters(index))}.toIndexedSeq))
@@ -56,7 +56,9 @@ class KMeans(private val k: Int,
         val centroids = data.takeSample(false, k, randomSeed)
 
         val centroidsIndexes = 0 until k
+
         var dist = 0d
+
         do {
 
             val closestCentroid = calcClosestCentroids(data, centroids, centroidsIndexes)

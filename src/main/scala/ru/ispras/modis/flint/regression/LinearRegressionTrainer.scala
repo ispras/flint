@@ -27,9 +27,7 @@ class LinearRegressionTrainer(private val eps: Double = 1e-2,
 
         val dataSize = data.count()
 
-        val numDimensions = data.reduce(
-            (x, y) => if (x.last.featureId > y.last.featureId) x else y
-        ).last.featureId + 1
+        val numDimensions = data.first().numDimentions
 
         val randArray = DenseVector.zeros[Double](numDimensions)
         for (i <- 0 until randArray.length)

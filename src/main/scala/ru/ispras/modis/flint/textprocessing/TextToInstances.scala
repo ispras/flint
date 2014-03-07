@@ -1,7 +1,7 @@
 package ru.ispras.modis.flint.textprocessing
 
 import org.apache.spark.rdd.RDD
-import ru.ispras.modis.flint.instances.{Instance, BinaryFeature}
+import ru.ispras.modis.flint.instances.{InstanceFactory, Instance, BinaryFeature}
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,6 +14,6 @@ class TextToInstances(private val tokenizer: Tokenizer, private val preprocessor
         val tokens = texts.map(text => tokenizer(preprocessor(text)))
         val tokenToIndex = tokens.flatMap(x => x).distinct().collect().zipWithIndex.toMap
 
-        tokens.map(tokens => new Instance(tokens.map(token => new BinaryFeature(tokenToIndex(token)))))
+        tokens.map(tokens => InstanceFactory(tokens.map(token => new BinaryFeature(tokenToIndex(token)))))
     }
 }

@@ -6,5 +6,4 @@ package ru.ispras.modis.flint.instances
  * Date: 7/22/13
  * Time: 5:56 PM
  */
-class LabelledInstance[LabelType](private val featuresToWeights: IndexedSeq[Feature],
-                                  val label: LabelType) extends Instance(featuresToWeights: IndexedSeq[Feature])
+class LabelledInstance[LabelType](data:Instance, val label: LabelType) extends Instance(data.points)

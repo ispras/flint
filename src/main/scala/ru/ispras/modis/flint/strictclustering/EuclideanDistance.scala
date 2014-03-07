@@ -10,15 +10,16 @@ import ru.ispras.modis.flint.instances.Instance
  */
 object EuclideanDistance extends Distance with Serializable {        // why Serializable?
     def apply(first: Instance, second: Instance): Double = {
-        val firstMap = instanceToMap(first)
-        val secondMap = instanceToMap(second)
-
-        math.sqrt(firstMap.keySet.union(secondMap.keySet).foldLeft(0d)((sum, index) => sum +
-            math.pow(firstMap(index) - secondMap(index), 2)
-        ))
+//        val firstMap = instanceToMap(first)
+//        val secondMap = instanceToMap(second)
+//
+//        math.sqrt(firstMap.keySet.union(secondMap.keySet).foldLeft(0d)((sum, index) => sum +
+//            math.pow(firstMap(index) - secondMap(index), 2)
+//        ))
+        0
     }
 
-    def instanceToMap(first: Instance) = {
-        first.map(feature => (feature.featureId, feature.featureWeight)).toMap.withDefaultValue(0d)
-    }
+//    def instanceToMap(first: Instance) = {
+//        first.map(feature => (feature.featureId, feature.featureWeight)).toMap.withDefaultValue(0d)
+//    }
 }

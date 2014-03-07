@@ -12,6 +12,7 @@ import ru.ispras.modis.flint.regression.SimpleStepper
 import ru.ispras.modis.flint.instances.Instance
 import ru.ispras.modis.flint.strictclustering.KMeans
 import ru.ispras.modis.flint.instances.InstanceOp
+import breeze.linalg.SparseVector
 
 /**
  * Created with IntelliJ IDEA.
@@ -52,17 +53,18 @@ object Test extends App {
     }*/
 
 
-    val data = sc.textFile("/home/saylars/smth/test1.csv").map(line => {
-        var features = line.split(",").map(_.toDouble).toList
-        features = 1.0 :: features
-        new LabelledInstance[Double](features.init.zipWithIndex.map {
-            case (weight, id) => new WeightedFeature(id, weight)
-        }.toIndexedSeq, features.last)
-    })
+//    val data = sc.textFile("/home/saylars/smth/test1.csv").map(line => {
+//        var features = line.split(",").map(_.toDouble).toList
+//        features = 1.0 :: features
+//        new LabelledInstance[Double](features.init.zipWithIndex.map {
+//            case (weight, id) => new WeightedFeature(id, weight)
+//        }.toIndexedSeq, features.last)
+//    })
+//    val data1 = (new NormalizingInstancePreprocessor[LabelledInstance[Double]]() :+ new NormalizingInstancePreprocessor[LabelledInstance[Double]]()).apply(data)
+//    val time = System.nanoTime()
+//    val x = new RegressionCrossValidator(0.8, 3, DefaultSeedGenerator.getInstance(), MersenneTwistProvider).apply(new LinearRegressionTrainer(0.01, 100, new ArmijoStepper, DefaultSeedGenerator.getInstance(), MersenneTwistProvider), data.cache())
+//    println(x.rootMeanSquareDeviation)
+//    println((System.nanoTime() - time)/ 1000000.0)
+    val x = SparseVector.zeros[Double](5)
 
-    val data1 = (new NormalizingInstancePreprocessor[LabelledInstance[Double]]() :+ new NormalizingInstancePreprocessor[LabelledInstance[Double]]()).apply(data)
-    val time = System.nanoTime()
-    val x = new RegressionCrossValidator(0.8, 3, DefaultSeedGenerator.getInstance(), MersenneTwistProvider).apply(new LinearRegressionTrainer(0.01, 100, new ArmijoStepper, DefaultSeedGenerator.getInstance(), MersenneTwistProvider), data.cache())
-    println(x.rootMeanSquareDeviation)
-    println((System.nanoTime() - time)/ 1000000.0)
 }

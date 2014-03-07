@@ -12,10 +12,10 @@ trait InstanceBuilder[T <: Instance] extends Serializable {
 
 object InstanceBuilder {
     implicit def instanceBuilder = new InstanceBuilder[Instance] {
-        def apply(toMakeFrom: Instance, newFeatures: IndexedSeq[Feature]) = new Instance(newFeatures)
+        def apply(toMakeFrom: Instance, newFeatures: IndexedSeq[Feature]) = InstanceFactory(newFeatures)
     }
 
     implicit def labelledInstanceBuilder[LabelType] = new InstanceBuilder[LabelledInstance[LabelType]] {
-        def apply(toMakeFrom: LabelledInstance[LabelType], newFeatures: IndexedSeq[Feature]): LabelledInstance[LabelType] = new LabelledInstance[LabelType](newFeatures, toMakeFrom.label)
+        def apply(toMakeFrom: LabelledInstance[LabelType], newFeatures: IndexedSeq[Feature]): LabelledInstance[LabelType] = new LabelledInstance[LabelType](InstanceFactory(newFeatures), toMakeFrom.label)
     }
 }

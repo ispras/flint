@@ -1,7 +1,6 @@
 package ru.ispras.modis.flint.instances
 
-import scala.collection.generic.Sorted
-
+import breeze.linalg.SparseVector
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,26 +13,15 @@ import scala.collection.generic.Sorted
  * Do not forget to implement InstanceBuilder trait for every
  * inheritor and to implement the corresponding implicit method in InstanceBuilder object
  */
-class Instance(private val featuresToWeights: IndexedSeq[Feature]) extends IndexedSeq[Feature] with Serializable {
-    //require(featuresToWeights.view.zip(featuresToWeights.tail).forall(x => x._1 < x._2))
-    require(isSorted())      //which og these methods are better?  or how to realise it?
+class Instance(private[instances] val points: SparseVector[Double]) extends Serializable {
 
-    override def iterator: Iterator[Feature] = featuresToWeights.iterator
+    def iterator: Iterator[(Int, Double)] = points.iterator
 
-    def length: Int = featuresToWeights.length
+    def size: Int = points.activeSize
 
-    def apply(idx: Int): Feature = featuresToWeights(idx)
+    def numDimentions = points.length
 
-    def isSorted():Boolean = {
-        val t = featuresToWeights.iterator
-        var cur = t.next()
-        do {
-           val prev = cur
-           cur = t.next()
-           if (prev >= cur)
-               return false
-        } while (t.hasNext)
-        true
-    }
+    def apply(idx: Int): Double = points(idx)
+
 }
 
