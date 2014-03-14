@@ -34,6 +34,6 @@ class NormalizingInstancePreprocessor[T <: Instance] extends InstancePreprocesso
 */
         val dataSetSize = data.count()
         val meanValues = data.reduce(_ + _).divByAlpha(dataSetSize)
-        data.map(instance => (instance - meanValues).norml2())
+        data.map(instance => (instance - meanValues).divByAlpha((instance - meanValues).norml2()))
     }
 }
