@@ -27,7 +27,7 @@ class LinearRegressionTrainer(private val eps: Double = 1e-2,
 
         val dataSize = data.count()
 
-        val numDimensions = data.first().numDimentions
+        val numDimensions = data.first().lenght
 
         val randArray = DenseVector.zeros[Double](numDimensions)
         for (i <- 0 until randArray.length)
@@ -51,9 +51,16 @@ class LinearRegressionTrainer(private val eps: Double = 1e-2,
                     val sum = (point.label - currentModel(point)) / dataSize
 
                     val shift = DenseVector.zeros[Double](numDimensions)
-                    for (j <- point)
-                        shift(j.featureId) = j.featureWeight * sum
 
+//                    for (j <- point)
+//                        shift(j.featureId) = j.featureWeight * sum
+                    var offset = 0
+                    while(offset < point.activeSize) {
+                        val index = point.indexAt(offset)
+                        val value = point.valueAt(offset)
+                        shift(index) = value * sum
+                        offset += 1
+                    }
                     shift
                 }
             }.reduce(_ + _)

@@ -13,8 +13,15 @@ class LinearRegressionModel(private[regression] val weights: DenseVector[Double]
 
     def apply(instance: Instance): Double = {
         var sum = 0.0
-        for (i <- instance)
-            sum += weights(i.featureId) * i.featureWeight
+        var offset = 0
+        while (offset < instance.activeSize) {
+            val index = instance.indexAt(offset)
+            val value = instance.valueAt(offset)
+            if (index >= weights.length)
+                return 0 // how to throw IndexOutOfBoundsException
+            else
+                sum += weights(index) * value
+        }
         sum
     }
 

@@ -2,7 +2,7 @@ package ru.ispras.modis.flint.datapreprocessors
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.SparkContext.rddToPairRDDFunctions
-import ru.ispras.modis.flint.instances.{InstanceBuilder, WeightedFeature, Instance}
+import ru.ispras.modis.flint.instances.{InstanceFactory, InstanceBuilder, WeightedFeature, Instance}
 import scala.reflect.ClassTag
 
 /**
@@ -13,6 +13,7 @@ import scala.reflect.ClassTag
  */
 class NormalizingInstancePreprocessor[T <: Instance] extends InstancePreprocessor[T] {
     def apply(data: RDD[T])(implicit manifest: ClassTag[T], instanceBuilder: InstanceBuilder[T]): RDD[T] = {
+/*
         val dataSetSize = data.count()
         val gropedByFeatureId: RDD[(Int, Seq[Double])] = data.flatMap(_.map(feature => (feature.featureId, feature.featureWeight))).groupByKey()
 
@@ -30,5 +31,9 @@ class NormalizingInstancePreprocessor[T <: Instance] extends InstancePreprocesso
         data.map(instance =>
             instanceBuilder(instance, instance.map(feature => new WeightedFeature(feature.featureId, (feature.featureWeight - meanValues(feature.featureId)) / rootMeanSquareDeviations(feature.featureId))))
         )
+*/
+        val dataSetSize = data.count()
+        val meanValues = data.reduce(_ + _).divByAlpha(dataSetSize)
+        data.map(instance => (instance - meanValues).norml2())
     }
 }

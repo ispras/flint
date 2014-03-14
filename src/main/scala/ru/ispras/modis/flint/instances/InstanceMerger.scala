@@ -10,11 +10,10 @@ import org.apache.spark.rdd.RDD
  */
 object InstanceMerger {
     def apply(first: RDD[Instance], second: RDD[Instance]) = {
-        val maxInFirst = first.map(_.maxBy(_.featureId).featureId).aggregate(Int.MinValue)((maxSoFar, id) => math.max(id, maxSoFar), (maxSoFar, id) => math.max(id, maxSoFar))
 
         first.zip(second).map {
             case (firstInstance, secondInstance) =>
-                new Instance(IndexedSeq[Feature]() ++ firstInstance ++ secondInstance.map(feature => new WeightedFeature(feature.featureId + maxInFirst + 1, feature.featureWeight)))
+                firstInstance.append(secondInstance)
         }
     }
 }

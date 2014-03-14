@@ -15,7 +15,7 @@ object InstanceFactory {
             indexes(i) = data(i).featureId
             values(i) = data(i).featureWeight
         }
-        new Instance(new SparseVector(indexes, values, data.last.featureId))
+        new Instance(new SparseVector(indexes, values, data.last.featureId + 1))
     }
 
 }

@@ -6,8 +6,9 @@ import scala.math.log
 import org.apache.spark.rdd.RDD
 import org.scalacheck.Prop.{True, False}
 import scala.math.abs
+import scala.reflect.ClassTag
 
-class BayesEstimator[LabelType: ClassManifest] extends DensityEstimator[LabelType]{
+class BayesEstimator[LabelType: ClassTag] extends DensityEstimator[LabelType]{
 
 
 

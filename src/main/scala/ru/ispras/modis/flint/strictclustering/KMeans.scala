@@ -45,7 +45,7 @@ class KMeans(private val k: Int,
         closestCentroid.reduceByKey(_ + _).map{
             case (index, summarizedPoint) =>
 
-            (index, new Instance(summarizedPoint.map{ feature => new WeightedFeature(feature.featureId, feature.featureWeight / sizeOfClusters(index))}.toIndexedSeq))
+            (index, summarizedPoint.divByAlpha(sizeOfClusters(index)))
 
         }.collectAsMap()
 
