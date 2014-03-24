@@ -2,7 +2,7 @@ package ru.ispras.modis.flint.strictclustering
 
 
 import org.apache.spark.rdd.RDD
-import ru.ispras.modis.flint.instances.{Instance, WeightedFeature}
+import ru.ispras.modis.flint.instances.Instance
 import org.apache.spark.SparkContext.rddToPairRDDFunctions
 
 import java.lang.System
@@ -67,6 +67,7 @@ class KMeans(private val k: Int,
 
             dist = 0d // create a function like getEnergy. And I think var dist should be renamed.
             //MIKE : dont understand what you want
+            // create a function getEnergy that calculates all the shit you calculate below. It's energy, is not it?
 
             for (i <- centroidsIndexes) {
                 dist += distance(centroids(i), newCenters(i))

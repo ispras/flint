@@ -54,6 +54,7 @@ class LinearRegressionTrainer(private val eps: Double = 1e-2,
 
 //                    for (j <- point)
 //                        shift(j.featureId) = j.featureWeight * sum
+// FIXME say no commented code!!!
                     var offset = 0
                     while(offset < point.activeSize) {
                         val index = point.indexAt(offset)

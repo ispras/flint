@@ -8,6 +8,8 @@ package ru.ispras.modis.flint.instances
  */
 trait InstanceBuilder[T <: Instance] extends Serializable {
     def apply(toMakeFrom: T, newFeatures: IndexedSeq[Feature]): T
+
+    // would it be better to use def apply(toMakeFrom: T, SparseVector[Double]): T ?
 }
 
 object InstanceBuilder {
