@@ -10,7 +10,7 @@ import ru.ispras.modis.flint.crossvalidation.RegressionCrossValidator
 import ru.ispras.modis.flint.regression.ArmijoStepper
 import ru.ispras.modis.flint.regression.SimpleStepper
 import ru.ispras.modis.flint.strictclustering.KMeans
-import ru.ispras.modis.flint.instances.InstanceOp
+//import ru.ispras.modis.flint.instances.InstanceOp
 import breeze.linalg.SparseVector
 
 /**
@@ -22,8 +22,8 @@ import breeze.linalg.SparseVector
 
 object Test extends App {
     val sc = new SparkContext("local[4]", "")
-
-//    val data = sc.textFile("/home/saylars/smth/kmeans_dataset3.txt").map(line => {
+//
+//    val data = sc.textFile("/home/vlad/Downloads/Mikhail_term/python/file").map(line => {
 //    var features = line.split(" ").map(_.toDouble).toList
 //    InstanceFactory(features.zipWithIndex.map {
 //        case (weight, id) => new WeightedFeature(id, weight)
@@ -32,7 +32,7 @@ object Test extends App {
 //    val x = new KMeans(4, 0).apply(data)
 //    val y = x.toArray()
 //    for (i <- y) {
-//        //println(i._1 +" "+ i._2.length)
+//      //  println(i._1 +" "+ i._2.length)
 //        /*val t = InstanceOp.sum(i._2.apply(1),i._2.apply(2))
 //        for (q <- i._2.apply(1))
 //            print(q.featureWeight + " ")
@@ -51,12 +51,12 @@ object Test extends App {
 //        }
 //    }
 
-    val data = sc.textFile("/home/saylars/smth/test1.csv").map(line => {
+    val data = sc.textFile("/home/vlad/Downloads/Mikhail_term/python/housing.data.txt").map(line => {
         var features = line.split(",").map(_.toDouble).toList
         features = 1.0 :: features
-        new LabelledInstance[Double](features.init.zipWithIndex.map {
+        new LabelledInstance[Double](InstanceFactory(features.init.zipWithIndex.map {
             case (weight, id) => new WeightedFeature(id, weight)
-        }.toIndexedSeq, features.last)
+        }.toIndexedSeq), features.last)
     })
     val data1 = (new NormalizingInstancePreprocessor[LabelledInstance[Double]]() :+ new NormalizingInstancePreprocessor[LabelledInstance[Double]]()).apply(data)
     val time = System.nanoTime()

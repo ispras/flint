@@ -14,8 +14,8 @@ import breeze.linalg._
  * Do not forget to implement InstanceBuilder trait for every
  * inheritor and to implement the corresponding implicit method in InstanceBuilder object
  */
-class Instance(private[instances] val points: SparseVector[Double]) extends Serializable {
 
+class Instance(private[instances] val points: SparseVector[Double]) extends Serializable {
     def iterator: Iterator[(Int, Double)] = points.iterator
 
     def activeSize: Int = points.activeSize
@@ -48,12 +48,11 @@ class Instance(private[instances] val points: SparseVector[Double]) extends Seri
 
     //
     //
-    def norml2() = {
-        //rename normL2                                                                              //
-        for (i <- points) //
-            print(i + " ") //O_o                                                                        //  FIXME: PLEASE!!!
-        println() //
-        println(this.points.norm(2)) //
+    def normL2() = {                                                                       //
+//        for (i <- points) //
+//            print(i + " ") //O_o                                                                        //  FIXME: PLEASE!!!
+//        println() //
+//        println(this.points.norm(2)) //
         this.points.norm(2) //
     }
 

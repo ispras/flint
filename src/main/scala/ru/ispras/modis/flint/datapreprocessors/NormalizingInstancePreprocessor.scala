@@ -10,7 +10,12 @@ import scala.reflect.ClassTag
  * Date: 7/25/13
  * Time: 7:54 PM
  */
-class NormalizingInstancePreprocessor[T <: Instance] extends InstancePreprocessor[T] {
+class NormalizingInstancePreprocessor[T <: Instance] extends InstancePreprocessor[T] with Serializable{  //FIXME Serializable
+
+    def r(x:T, y:T):T= {
+        x.asInstanceOf[Instance].+(y.asInstanceOf[Instance]).asInstanceOf[T]
+    }
+
     def apply(data: RDD[T])(implicit manifest: ClassTag[T], instanceBuilder: InstanceBuilder[T]): RDD[T] = {
         /*
                 val dataSetSize = data.count()
@@ -31,13 +36,16 @@ class NormalizingInstancePreprocessor[T <: Instance] extends InstancePreprocesso
                     instanceBuilder(instance, instance.map(feature => new WeightedFeature(feature.featureId, (feature.featureWeight - meanValues(feature.featureId)) / rootMeanSquareDeviations(feature.featureId))))
                 )
         */
+
+        //val r: (T) => T = T.plus
+
         val dataSetSize = data.count()
-        val meanValues = data.reduce(_ + _).divByAlpha(dataSetSize) //dosent work and i dont know why
+        val meanValues = data.reduce(r).divByAlpha(dataSetSize) //dosent work and i dont know why
         // it does not work because you are to guarantee that every T<: Instance (every inheritor of Instance)
         // implements method + (T,T) => T
         // I have no idea how to achieve that.
         // If you want to, come along with me my friend! say the words and you'll be free... ^W^W^W^W^W^W^W^W^W^W^W
         // If you want to, just cast Instances to SparseVectors.
-        data.map(instance => (instance - meanValues).divByAlpha((instance - meanValues).norml2())) // same
+        data.map(instance => instanceBuilder(instance, (instance - meanValues).divByAlpha((instance - meanValues).normL2()))) // same
     }
 }
